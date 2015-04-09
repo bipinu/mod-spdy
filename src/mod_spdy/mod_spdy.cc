@@ -81,7 +81,7 @@ COMPILE_ASSERT(arraysize(kFakeModSpdyProtocolNameNoVersion) <= 255,
 const char* const kHttpProtocolName = "http/1.1";
 const char* const kSpdy2ProtocolName = "spdy/2";
 const char* const kSpdy3ProtocolName = "spdy/3";
-const char* const kSpdy31ProtocolName = "spdy/3.1";
+// const char* const kSpdy31ProtocolName = "spdy/3.1";
 const char* const kSpdyVersionEnvironmentVariable = "SPDY_VERSION";
 
 const char* const kPhpModuleNames[] = {
@@ -485,7 +485,7 @@ int AdvertiseSpdy(conn_rec* connection, apr_array_header_t* protos) {
   // Advertise SPDY to the client.  We push protocol names in descending order
   // of preference; the one we'd most prefer comes first.
   // TODO(mdsteele): Advertise SPDY/3.1 once we fully support it.
-  APR_ARRAY_PUSH(protos, const char*) = kSpdy31ProtocolName;
+  // APR_ARRAY_PUSH(protos, const char*) = kSpdy31ProtocolName;
   APR_ARRAY_PUSH(protos, const char*) = kSpdy3ProtocolName;
   APR_ARRAY_PUSH(protos, const char*) = kSpdy2ProtocolName;
   return OK;
@@ -581,11 +581,12 @@ int OnNextProtocolNegotiated(conn_rec* connection, const char* proto_name,
     master_context->set_npn_state(
         mod_spdy::MasterConnectionContext::USING_SPDY);
     master_context->set_spdy_version(mod_spdy::spdy::SPDY_VERSION_3);
-  } else if (protocol_name == kSpdy31ProtocolName) {
-    master_context->set_npn_state(
-        mod_spdy::MasterConnectionContext::USING_SPDY);
-    master_context->set_spdy_version(mod_spdy::spdy::SPDY_VERSION_3_1);
-  }
+  } 
+  // else if (protocol_name == kSpdy31ProtocolName) {
+//     master_context->set_npn_state(
+//         mod_spdy::MasterConnectionContext::USING_SPDY);
+//     master_context->set_spdy_version(mod_spdy::spdy::SPDY_VERSION_3_1);
+//   }
   // Otherwise, explicitly mark this connection as not using SPDY.
   else {
     master_context->set_npn_state(
